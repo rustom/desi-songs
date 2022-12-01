@@ -1,5 +1,5 @@
 import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import os
 from dotenv import load_dotenv
 
@@ -18,4 +18,16 @@ sp = spotipy.Spotify(auth_manager=auth_manager)
 #     else:
 #         playlists = None
         
-saved
+scope = "user-library-read"
+
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+
+results = sp.current_user_saved_tracks()
+all_genres = {}
+for idx, item in enumerate(results['items']):
+    print(item['track']['artists'][0]['uri'])
+    artist_uri = item['track']['artists'][0]['uri']
+    genres = sp.artist(artist_uri)['genres']
+    print(genres)
+    track = item['track']
+    # print(idx, track['artists'][0]['name'], " – ", track['name'])
